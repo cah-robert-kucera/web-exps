@@ -1,25 +1,25 @@
-import kotlinx.html.div
-import kotlinx.html.dom.append
-import org.w3c.dom.Node
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.html.InputType
 import kotlinx.html.body
+import kotlinx.html.div
+import kotlinx.html.dom.append
 import kotlinx.html.form
 import kotlinx.html.h1
-import kotlinx.html.head
+import kotlinx.html.id
 import kotlinx.html.input
 import kotlinx.html.js.onSubmitFunction
 import kotlinx.html.label
-import kotlinx.html.onClick
 import kotlinx.html.submitInput
-import kotlinx.html.title
+import org.w3c.dom.HTMLFormElement
+import org.w3c.dom.HTMLInputElement
+import org.w3c.dom.Node
+import org.w3c.dom.get
 
 fun main() {
 
     window.onload = {
-        println("loaded")
-        document.head?.title = "Healthprize Signup"
+        document.title = "Healthprize Signup"
         document.body?.sayHello()
     }
 }
@@ -28,27 +28,42 @@ fun Node.sayHello() {
     append {
         body {
             h1 {
-                +"Healthprize Signup 2"
+                +"Healthprize Signup"
             }
             div {
                 form {
+                    id = "signupForm"
                     label { +"Email" }
-                    input(InputType.email, name = "Email")
+                    input(InputType.email) {
+                        id = "Email"
+                    }
 
                     label { +"Member Id" }
-                    input(InputType.text, name = "MemberId")
+                    input(InputType.text) {
+                        id = "MemberId"
+                    }
 
                     label { +"First Name" }
-                    input(InputType.text, name = "FirstName")
+                    input(InputType.text) {
+                        id = "FirstName"
+                    }
 
                     label { +"Last Name" }
-                    input(InputType.text, name = "LastName")
-
-                    submitInput {
+                    input(InputType.text) {
+                        id = "LastName"
                     }
+
+                    submitInput { }
                     onSubmitFunction = { event ->
                         event.preventDefault()
-                        println(event)
+
+                        val form = document.getElementById("signupForm") as HTMLFormElement
+                        val firstName = (form["FirstName"] as HTMLInputElement).value
+                        val lastName = (form["LastName"] as HTMLInputElement).value
+                        val memberId = (form["MemberId"] as HTMLInputElement).value
+                        val email = (form["Email"] as HTMLInputElement).value
+
+                        println(listOf(firstName,lastName,memberId,email).joinToString())
                     }
                 }
             }
