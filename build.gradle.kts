@@ -17,6 +17,7 @@ dependencies {
 
 kotlin {
     js(IR) {
+//        moduleName = "web-exps"
         binaries.executable()
         browser {
             commonWebpackConfig {
@@ -25,3 +26,14 @@ kotlin {
         }
     }
 }
+
+//task("copyStylesheets", Copy::class) {
+//    from(kotlin.sourceSets["main"].resources) {
+//        include("styles/**")
+//    }
+//    into("${rootProject.buildDir}/js/packages/${kotlin.js().moduleName}")
+//    // kotlin { js { moduleName = "xyz" }} has to be set for this to work
+//}
+//tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinJsDce::class) {
+//    dependsOn("copyStylesheets")
+//}
