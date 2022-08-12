@@ -13,7 +13,7 @@ label {
     padding-bottom: 5px;
 }
 
-#instructions{
+#instructions {
     margin-top: 20px;
     margin-bottom: 20px;
 }
@@ -29,4 +29,28 @@ label {
 
 #submit-signup:hover {
     background: aqua;
+}
+
+#submit-status {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.submit-success {
+    background: darkseagreen;
+    margin: auto;
+    padding: 10px;
+    outline: none;
+    border: none;
+    border-radius: 2px;
+    width: 300px;
+}
+
+.submit-failed {
+    background: orangered;
+    padding: 10px;
+    outline: none;
+    border: none;
+    border-radius: 2px;
+    width: 300px;
 }

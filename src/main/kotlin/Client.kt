@@ -1,6 +1,7 @@
 import io.ktor.client.*
 import io.ktor.client.engine.js.*
 import io.ktor.client.request.*
+import io.ktor.http.*
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.coroutines.GlobalScope
@@ -23,6 +24,7 @@ import org.w3c.dom.Node
 import org.w3c.dom.get
 import kotlinx.serialization.*
 import kotlinx.serialization.json.*
+import org.w3c.dom.events.Event
 
 val client = HttpClient(Js)
 
@@ -86,26 +88,47 @@ fun Node.sayHello() {
                     submitInput {
                         id = "submit-signup"
                     }
-                    onSubmitFunction = { event ->
-                        event.preventDefault()
+                    onSubmitFunction = ::submitSignup
+                }
+            }
+            div {
+                id = "submit-status"
+            }
+        }
+    }
+}
 
-                        val form = document.getElementById("signup-form") as HTMLFormElement
-                        val firstName = (form["first-name"] as HTMLInputElement).value
-                        val lastName = (form["last-name"] as HTMLInputElement).value
-                        val memberId = (form["member-id"] as HTMLInputElement).value
-                        val email = (form["email"] as HTMLInputElement).value
+private fun submitSignup(event: Event) {
+    event.preventDefault()
 
-                        println(listOf(firstName, lastName, memberId, email).joinToString())
-                        GlobalScope.launch {
-                            client.post("http://localhost:8080/startEnrollment") {
-                                val patient = Json.encodeToString(PatientEnrollmentAttempt(memberId, email, firstName, lastName))
-                                println("patient: $patient")
-                                setBody(patient)
-                            }
-                            println("Enrollment started")
-                        }
+    val submitStatus = document.getElementById("submit-status")!!
+    val form = document.getElementById("signup-form") as HTMLFormElement
+    val firstName = (form["first-name"] as HTMLInputElement).value
+    val lastName = (form["last-name"] as HTMLInputElement).value
+    val memberId = (form["member-id"] as HTMLInputElement).value
+    val email = (form["email"] as HTMLInputElement).value
 
-                    }
+    println(listOf(firstName, lastName, memberId, email).joinToString())
+
+    submitStatus.innerHTML = ""
+    GlobalScope.launch {
+        val response = client.post("http://localhost:8080/startEnrollment") {
+            val patient = Json.encodeToString(PatientEnrollmentAttempt(memberId, email, firstName, lastName))
+            println("patient: $patient")
+            setBody(patient)
+        }
+        if (response.status == HttpStatusCode.OK) {
+            println("Enrollment started")
+            submitStatus.append {
+                div("submit-success") {
+                    +"Enrollment started. Check your email!"
+                }
+            }
+        } else {
+            println("Enrollment Failed")
+            submitStatus.append {
+                div("submit-failed") {
+                    +"Enrollment Failed. Please try again"
                 }
             }
         }
