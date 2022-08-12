@@ -1,5 +1,6 @@
 plugins {
     kotlin("js") version "1.7.10"
+    kotlin("plugin.serialization") version "1.7.10"
 }
 
 group = "org.example"
@@ -10,9 +11,15 @@ repositories {
     maven("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven")
 }
 
+val ktorVersion = "2.0.3"
+
 dependencies {
     testImplementation(kotlin("test"))
     implementation("org.jetbrains.kotlinx:kotlinx-html:0.7.2")
+    implementation("io.ktor:ktor-client-js:$ktorVersion")
+    implementation("io.ktor:ktor-client-core:$ktorVersion")
+    implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
+    implementation("io.ktor:ktor-client-serialization:$ktorVersion")
 }
 
 kotlin {

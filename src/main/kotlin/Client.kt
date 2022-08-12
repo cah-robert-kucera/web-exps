@@ -1,7 +1,11 @@
+import io.ktor.client.*
+import io.ktor.client.engine.js.*
+import io.ktor.client.request.*
 import kotlinx.browser.document
 import kotlinx.browser.window
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kotlinx.html.InputType
-import kotlinx.html.b
 import kotlinx.html.body
 import kotlinx.html.br
 import kotlinx.html.div
@@ -17,6 +21,10 @@ import org.w3c.dom.HTMLFormElement
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.Node
 import org.w3c.dom.get
+import kotlinx.serialization.*
+import kotlinx.serialization.json.*
+
+val client = HttpClient(Js)
 
 fun main() {
     window.onload = {
@@ -33,7 +41,7 @@ fun Node.sayHello() {
             div {
                 id = "instructions"
                 +"Welcome to Healthprize with Outcomes!"
-                br {  }
+                br { }
                 +"Please fill out this quick form so we can set up your account."
             }
             div {
@@ -43,6 +51,8 @@ fun Node.sayHello() {
                         label { +"Email" }
                         input(InputType.email) {
                             id = "email"
+                            required = true
+                            value = "robert.kucera@cardinalhealth.com"
                         }
                     }
 
@@ -50,6 +60,8 @@ fun Node.sayHello() {
                         label { +"Member Id" }
                         input(InputType.text) {
                             id = "member-id"
+                            required = true
+                            value = "123"
                         }
                     }
 
@@ -57,6 +69,8 @@ fun Node.sayHello() {
                         label { +"First Name" }
                         input(InputType.text) {
                             id = "first-name"
+                            required = true
+                            value = "Bob"
                         }
                     }
 
@@ -64,6 +78,8 @@ fun Node.sayHello() {
                         label { +"Last Name" }
                         input(InputType.text) {
                             id = "last-name"
+                            required = true
+                            value = "Baggins"
                         }
                     }
 
@@ -80,9 +96,26 @@ fun Node.sayHello() {
                         val email = (form["email"] as HTMLInputElement).value
 
                         println(listOf(firstName, lastName, memberId, email).joinToString())
+                        GlobalScope.launch {
+                            client.post("http://localhost:8080/startEnrollment") {
+                                val patient = Json.encodeToString(PatientEnrollmentAttempt(memberId, email, firstName, lastName))
+                                println("patient: $patient")
+                                setBody(patient)
+                            }
+                            println("Enrollment started")
+                        }
+
                     }
                 }
             }
         }
     }
 }
+
+@Serializable
+data class PatientEnrollmentAttempt(
+    val memberId: String,
+    val email: String,
+    val firstName: String,
+    val lastName: String,
+)
