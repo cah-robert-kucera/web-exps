@@ -1,3 +1,32 @@
 body {
-    background: blue;
+    text-align: center;
+}
+
+label {
+    padding-right: 20px;
+}
+
+.form-line {
+    text-align: right;
+    width: 300px;
+    margin: auto;
+    padding-bottom: 5px;
+}
+
+#instructions{
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+#submit-signup {
+    background: cadetblue;
+    margin-top: 10px;
+    padding: 10px;
+    outline: none;
+    border: none;
+    border-radius: 2px;
+}
+
+#submit-signup:hover {
+    background: aqua;
 }
