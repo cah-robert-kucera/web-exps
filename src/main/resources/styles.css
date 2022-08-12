@@ -18,7 +18,7 @@ label {
     margin-bottom: 20px;
 }
 
-#submit-signup {
+.submit {
     background: cadetblue;
     margin-top: 10px;
     padding: 10px;
@@ -27,7 +27,7 @@ label {
     border-radius: 2px;
 }
 
-#submit-signup:hover {
+.submit:hover {
     background: aqua;
 }
 
@@ -48,6 +48,7 @@ label {
 
 .submit-failed {
     background: orangered;
+    margin: auto;
     padding: 10px;
     outline: none;
     border: none;
